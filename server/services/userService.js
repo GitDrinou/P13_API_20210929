@@ -1,4 +1,6 @@
 const User = require('../database/models/userModel')
+const Account = require('../database/models/accountModel')
+const Transaction = require('../database/models/transactionModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -89,6 +91,45 @@ module.exports.updateUserProfile = async serviceData => {
     }
 
     return user.toObject()
+  } catch (error) {
+    console.error('Error in userService.js', error)
+    throw new Error(error)
+  }
+}
+
+module.exports.getUserAccount = async serviceData => {
+  try {
+    const jwtToken = serviceData.headers.authorization.split('Bearer')[1].trim()
+    const decodedJwtToken = jwt.decode(jwtToken)
+
+    const account = await Account.find({userId: decodedJwtToken.id})
+
+    if (!account) {
+      throw new Error('Account not found!')
+    }
+
+    return account
+    
+  } catch (error) {
+    console.error('Error in userService.js', error)
+    throw new Error(error)
+  }
+}
+
+module.exports.getUserTransaction = async serviceData => {
+  try {
+    const jwtToken = serviceData.headers.authorization.split('Bearer')[1].trim()
+    const accountId = serviceData.body
+    const decodedJwtToken = jwt.decode(jwtToken)
+
+    const transaction = await Transaction.find({ userId: decodedJwtToken.id })
+
+    if (!transaction) {
+      throw new Error('Transaction not found!')
+    }
+
+    return transaction
+    
   } catch (error) {
     console.error('Error in userService.js', error)
     throw new Error(error)

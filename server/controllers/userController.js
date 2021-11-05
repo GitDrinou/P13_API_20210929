@@ -67,3 +67,38 @@ module.exports.updateUserProfile = async (req, res) => {
 
   return res.status(response.status).send(response)
 }
+
+module.exports.getUserAccount = async (req, res) => {
+  let response = {}
+
+  try {
+    const responseFromService = await userService.getUserAccount(req)
+    response.status = 200
+    response.message = 'Successfully got user Account data'
+    response.body = responseFromService
+  } catch (error) {
+    console.log('Error in userController.js')
+    response.status = 400
+    response.message = error.message
+  }
+
+  return res.status(response.status).send(response)
+}
+
+
+module.exports.getUserTransaction = async (req, res) => {
+  let response = {}
+
+  try {
+    const responseFromService = await userService.getUserTransaction(req)
+    response.status = 200
+    response.message = 'Successfully got user Transactions data'
+    response.body = responseFromService
+  } catch (error) {
+    console.log('Error in userController.js')
+    response.status = 400
+    response.message = error.message
+  }
+
+  return res.status(response.status).send(response)
+}
